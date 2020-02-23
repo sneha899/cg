@@ -7,7 +7,8 @@ public interface AccountDao {
 	public int createWalletAccount(WalletAccount account) throws AccountException;
 
 	public int depositAccount(int accoundId, double amount) throws AccountException;
-	public double showBalance(int userId2) throws AccountException; 
-	public int transferAmount(int accountId1, int accountId2, double amount1) throws AccountException;
+	public double showBalance(int accountId) throws AccountException; 
+	public void withdrawAmount(int accountId, double amount);
+	public void transferAmount(int fromAccountId, int toAccountId2, double amount) throws AccountException;
 
 }
