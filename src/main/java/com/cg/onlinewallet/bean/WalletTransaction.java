@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class WalletTransaction {
 
 	
-	private int transactionId;
+	private String transactionId;
 	private String description;
 	private LocalDateTime dateOfTransaction;
 	private double Amount;
@@ -14,7 +14,7 @@ public class WalletTransaction {
 	
 	
 	
-	public WalletTransaction(int transactionId, String description, LocalDateTime dateOfTransaction,
+	public WalletTransaction(String transactionId, String description, LocalDateTime dateOfTransaction,
 			double amount,double accountBalance)
 	{
 		super();
@@ -33,13 +33,13 @@ public class WalletTransaction {
 	}
 
 
-	public int getTransactionId() 
+	public String getTransactionId() 
 	{
 		return transactionId;
 	}
-	public void setTransactionId(int transactionId)
+	public void setTransactionId(String randomUUIDString)
 	{
-		this.transactionId = transactionId;
+		this.transactionId = randomUUIDString;
 	}
 	public String getDescription()
 	{
@@ -72,10 +72,7 @@ public class WalletTransaction {
 	public void setAccountBalance(double accountBalance)
 	{
 		this.accountBalance = accountBalance;
-	}
-	
-	
-	
+	}	
 }
 
 
