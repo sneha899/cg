@@ -7,74 +7,65 @@ import org.junit.Test;
 
 import com.cg.onlinewallet.bean.WalletAccount;
 import com.cg.onlinewallet.bean.WalletAccountType;
+import com.cg.onlinewallet.exception.AccountException;
 import com.cg.onlinewallet.service.AccountService;
+import com.cg.onlinewallet.service.AccountServiceImpl;
 
 public class AccountServiceTest {
 	
 	
-	
 	@Test
-	public void checkDepositAmount() {
-		try {
+	public void checkDepositAmount() throws AccountException {
 			
 			WalletAccount account= new WalletAccount(123,1000,WalletAccountType.SAVING,null);
 			
-			AccountService accountService = new AccountService();
+			AccountService accountService = new AccountServiceImpl();
 			
-			accountService.validateAndCreateWalletAccount(account);
-			accountService.validateAndCreateWalletAccount(account);
-			accountService.validateAndDepositAccount(123, 500);
+			accountService.createWalletAccount(account);
+			accountService.depositAccount(account, 500);
 
-			assertEquals(accountService.validateAndShowBalance(123),1500.0,0);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			assertEquals(accountService.showBalance(account),1500.0,0);
 	}
 	
 	@Test
-	public void checkTransferAmount() {
-		try {
+	public void checkTransferAmount() throws AccountException {
 			
 			WalletAccount fromAccount= new WalletAccount(123,1050,WalletAccountType.SAVING,null);
 
 			WalletAccount toAccount= new WalletAccount(456,5,WalletAccountType.SAVING,null);
 
-			AccountService accountService = new AccountService();
+			AccountService accountService = new AccountServiceImpl();
 			
-			accountService.validateAndCreateWalletAccount(fromAccount);
-			accountService.validateAndCreateWalletAccount(toAccount);
-			accountService.validateAndTransferAmount(123,456,200);
+			accountService.createWalletAccount(fromAccount);
+			accountService.createWalletAccount(toAccount);
+			accountService.transferAmount(fromAccount,toAccount,200);
 			
-
-			assertEquals(accountService.validateAndShowBalance(456),205.0,0);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			System.out.println("Account Balance in toAccount is :" +accountService.showBalance(toAccount));
+			assertEquals(accountService.showBalance(toAccount),205.0,0);
 	}
 	
 	@Test
-	public void checkTransferAmountWithInvalidFromAcc() {
+	public void checkTransferAmountWithInvalidFromAcc() throws AccountException {
 		try {
-			
 			WalletAccount fromAccount= new WalletAccount(123,1050,WalletAccountType.SAVING,null);
 
 			WalletAccount toAccount= new WalletAccount(456,5,WalletAccountType.SAVING,null);
+			
+			WalletAccount invalidFromAccount= new WalletAccount(100,5000,WalletAccountType.SAVING,null);
 
-			AccountService accountService = new AccountService();
+			AccountService accountService = new AccountServiceImpl();
 			
-			accountService.validateAndCreateWalletAccount(fromAccount);
-			accountService.validateAndCreateWalletAccount(toAccount);
+			accountService.createWalletAccount(fromAccount);
+			accountService.createWalletAccount(toAccount);
 			
-			accountService.validateAndTransferAmount(100,456,300);
-			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			assertEquals(e.getMessage(),"Invalid sender account or account number not found");
-			e.printStackTrace();;
+			accountService.transferAmount(invalidFromAccount,toAccount,300);
 		}
+		catch(Exception e) {
+				// TODO Auto-generated catch block
+				assertEquals(e.getMessage(),"Account number not found or Invalid account");
+				e.printStackTrace();;
+		}
+			
 	}
 	
 	@Test
@@ -85,15 +76,15 @@ public class AccountServiceTest {
 
 			WalletAccount toAccount= new WalletAccount(456,5,WalletAccountType.SAVING,null);
 
-			AccountService accountService = new AccountService();
-			accountService.validateAndCreateWalletAccount(fromAccount);
-			accountService.validateAndCreateWalletAccount(toAccount);
+			AccountService accountService = new AccountServiceImpl();
+			accountService.createWalletAccount(fromAccount);
+			accountService.createWalletAccount(toAccount);
 			
-					accountService.validateAndTransferAmount(123,456,2000);
+					accountService.transferAmount(fromAccount,toAccount,2000);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.getMessage(),"Insuffiecient balance");
+			assertEquals(e.getMessage(),"Requested amount can not be transfer due to low balance");
 			e.printStackTrace();;
 		}
 	}
